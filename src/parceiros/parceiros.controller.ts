@@ -1,5 +1,6 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, UseGuards } from '@nestjs/common';
 import { parceirosResponse } from 'src/@types/parceiros.interface';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ParceirosService } from './parceiros.service';
 
 @Controller()
@@ -8,6 +9,14 @@ export class ParceirosController {
     constructor(
         private readonly parceiros: ParceirosService
     ) {}
+    
+    @UseGuards(JwtAuthGuard)
+    @Get()
+    async testeJWT() {
+        return {
+            mensagem: 'autenticado'
+        }
+    }
 
     @Post('storeParceiro')
     async postParceiro(@Body() body, @Res() response) {
